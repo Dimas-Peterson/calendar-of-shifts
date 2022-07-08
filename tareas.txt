@@ -1,0 +1,13 @@
+Logica para tabla de turnos
+
+Por defecto:
+Boton seleccionado = HOY
+tabla = TURNOS DE HOY
+
+Logica
+1_ capturamos informacion de boton seleccionado: dia mes año
+2_ Pasamos esa informacion a row de fecha en tabla: 
+3_ De tabla capturamos horas, estados y botones
+
+------------------------------
+capturar elementos de la tabla y darle contenido en base a su estado y fecha

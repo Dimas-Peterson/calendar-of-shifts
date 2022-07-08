@@ -4,11 +4,84 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendario de Turnos</title>
+    <title>Calendario</title>
+    <!--==Archivo CSS==-->
     <link rel="stylesheet" href="Styles/main.css">
 </head>
 <body>
+    <div class="screen__wrapper" id="screenWrapper">
+        
+            <div class="calendar__wrapper" id="calendarWrapper">
+                <h1 class="title">Calendario Interactivo</h1>
+                <div class="calendar">
+                    <div class="calendar__info" id="calendarInfo">
+                        <div class="calendar__prev" id="prev-month">&#9664</div>
+                        <div class="calendar__month" id="month"></div>
+                        <div class="calendar__year" id="year"></div>
+                        <div class="calendar__next" id="next-month">&#9654</div>
+                    </div>
+                    <div class="calendar__week">
+                        <div class="calendar__day calendar__item">Mon</div>
+                        <div class="calendar__day calendar__item">Tue</div>
+                        <div class="calendar__day calendar__item">Wed</div>
+                        <div class="calendar__day calendar__item">Thu</div>
+                        <div class="calendar__day calendar__item">Fri</div>
+                        <div class="calendar__day calendar__item">Sat</div>
+                        <div class="calendar__day calendar__item">Sun</div>
+                    </div>
+                    <!--===== CONTENEDOR DE BOTONES =====-->
+                    <div class="calendar__dates" id="dates"></div>
+                </div>
+            </div>
 
-    <script src="Scripts/main.js" type="text/javascript" defer></script>
+            <!--===== LISTA DE TURNOS =====-->
+            <div class="list__wrapper" id="listWrapper">
+                <div class="shift__list" id="shiftList">
+                    <h2>TURNOS</h2>
+                    
+                    <table>
+                        <thead>
+                            <tr><th id="dateTable">DIA / MES / AÑO</th></tr>
+                            <tr>
+                                <th>Hora</th>
+                                <th>Estado</th>
+                                <th>Seleccionar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody">
+                            <tr>
+                                <td class="datatable__hour" id="td14hs">14</td>
+                                <td class="datatable__state" id="td14"></td>
+                                <td id="button14"></td>
+                            </tr>
+                            <tr>
+                                <td class="datatable__hour" id="td16hs">16</td>
+                                <td class="datatable__state" id="td16"></td>
+                                <td id="button16"></td>
+                            </tr>
+                            <tr>
+                                <td class="datatable__hour" id="td18hs">18</td>
+                                <td class="datatable__state" id="td18"></td>
+                                <td id="button18"></td>
+                            </tr>
+                            <tr>
+                                <td class="datatable__hour" id="td20hs">20</td>
+                                <td class="datatable__state" id="td20"></td>
+                                <td id="button20"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </div>
+        
+    </div>
+
+    <!--==Archivo Main JS==-->
+    <script src="Scripts/main.js"></script>
+
+    <!--==Archivo Select JS==-->
+    <script src="Scripts/select.js"></script>
+
+    <!--==Archivo Table JS==-->
+    <script src="Scripts/table.js"></script>
 </body>
 </html>

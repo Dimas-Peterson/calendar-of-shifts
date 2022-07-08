@@ -1,127 +1,178 @@
-/**Arreglo con los 12 meses. Después probar con "Const" */
-var mes_text = [
-  "Enero",
-  "Febrero",
-  "Marzo",
-  "Abril",
-  "Mayo",
-  "Junio",
-  "Julio",
-  "Agosto",
-  "Septiembre",
-  "Octubre",
-  "Noviembre",
-  "Diciembre",
-];
+let monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
-var dia_text = ["Dom", "Lun", "Mar", "Mie", "Juv", "Vie", "Sab"];
 
-estructurar();
+//---========== VARIABLES ==========---//
 
-function estructurar() {
-  for (m = 0; m <= 11; m++) {
-    /**Estructuracion con JS usando el metodo .createElement */
-    /**Creamos un div */
-    let mes = document.createElement("DIV");
+//Nos da la fecha del ordenador
+let currentDate = new Date();
 
-    /**Agregamos una clase al elemento */
-    mes.className = "mes";
+//Dia de la semana
+let currentDay = currentDate.getDate();
 
-    /**Agregamos el elemento al DOM */
-    document.body.appendChild(mes);
+//Numero del Mes 0 = enero y 11 = diciembre
+let monthNumber = currentDate.getMonth();
 
-    /**Creamos un elemento hijo del div anterior, de tipo TABLE */
+//Año
+let currentYear = currentDate.getFullYear();
 
-    let tabla_mes = document.createElement("TABLE");
-    tabla_mes.className = "tabla_mes";
-    mes.appendChild(tabla_mes);
+//Obtenemos los elementos del html
+let dates = document.getElementById("dates");
+let month = document.getElementById("month");
+let year = document.getElementById("year");
 
-    /**A la tabla le agregamos un titulo */
-    let titulo = document.createElement("CAPTION");
-    titulo.className = "titulo";
-    /**añadimos texto */
-    titulo.innerText = mes_text[m];
-    tabla_mes.appendChild(titulo);
+//Obtenemos los elementos flechas del html
+let prevMonthDOM = document.getElementById("prev-month");
+let nextMonthDOM = document.getElementById("next-month");
 
-    /**Añadimos los meses al HTML */
-    //A titulo le añadimos los nombres de lo meses a medida que recorremos el array
 
-     //Elementos de la tabla, thead
-     let cabecera = document.createElement("THEAD");
-     tabla_mes.appendChild(cabecera);
+//Para obtener la fecha de hoy
+const today = new Date();
+//Mes actual
+const currentMonth = today.getMonth();
 
-     //creamos y agregamos una fila a la cabecera
-     let fila = document.createElement("TR");
-     cabecera.appendChild(fila);
 
-     //Cabecera
-    for (d = 0; d < 7; d++) {
-        let dia = document.createElement("TH");
-        dia.innerText = dia_text[d]; //añadimos el texto a cada elemento
-        fila.appendChild(dia); //añadimos el elemento a la tabla
+
+//---========== FUNCIONES ==========---//
+
+//Al elemento month le coloco el nombre del mes en el que estamos
+month.textContent = monthNames[monthNumber];
+//Al elemento year del HTML le damos el nombre (transformamos el numero a string)
+year.textContent = currentYear.toString();
+
+//--== Agregamos los eventos a las flechas ==--//
+prevMonthDOM.addEventListener('click', () => lastMonth());
+nextMonthDOM.addEventListener('click', () => nextMonth());
+
+
+//Ejecutamos la funcion que dibuja los dias de los meses
+writeMonth(monthNumber);
+
+//Funcion que escribe los meses
+//le decimos que nos dibuje el total de dias del mes que le pasamos
+ function writeMonth(month) {
+
+    //Con este bucle hacemos que el mes empiece en el dia correcto, no siembre en lunes
+    for(let i = startDay(); i > 0; i--) {
+        dates.innerHTML += ` <div class="calendar__date calendar__item calendar__block-Days">${getTotalDays(monthNumber - 1) - (i - 1)}</div> `;
     }
 
-    //Cuerpo
-    //Creamos el elemento TBODY de la tabla
-    let cuerpo = document.createElement("TBODY");
-    //añadimos el elemento a la tabla
-    tabla_mes.appendChild(cuerpo);
-    for (f = 0; f < 6; f++) {
-        let fila = document.createElement("TR");
-        //Creamos y añadimos las filas de los dias por eso son 6
-        cuerpo.appendChild(fila);
+    //A partir de la cantidad de dias que tiene el mes que tenemos como parametro
+    for(let i = 1; i <= getTotalDays(month); i++){
+
+        //Dia de la semana
+        let dayWeek = new Date(currentYear, month, i);
+        let numDay = dayWeek.getDay();
         
-        for (d = 0; d < 7; d++) {
-          let dia = document.createElement("TD");
-          //creamos y añadimos cada dia a cada fila creada anteriormente, por eso esta anidada
-          dia.innerText = "";
-          fila.appendChild(dia);
-      }
+
+        //Si es igual significa que es HOY y le añadimos la clase "today"
+        if((i === currentDay) && (month === currentMonth)){
+            dates.innerHTML += ` <button class="calendar__date calendar__item calendar__today buttonSelect button">${i}</button> `;
+        
+        } else if ((numDay === 6) || (numDay === 0) || (month < currentMonth) || (i < currentDay)) {
+            //Si no es entre semana no se imprime como boton, si es un dia pasado tampoco
+            dates.innerHTML += ` <div class="calendar__date calendar__item calendar__block-Days">${i}</div> `;
+
+        } else {
+            //Sino escribe lo mismo pero sin la clase today
+            dates.innerHTML += ` <button class="calendar__date calendar__item button">${i}</button> `;
+        }
+
     }
-  }
-}
+ }
 
-numerar();
+ //Funcion para saber cuantos dias tiene que escribir segun el mes
+ function getTotalDays(month) {
+    if(month === -1) month = 11;
+    
+    //Elegimos la cantidad del dia segun el indice del mes
+    if(month == 0 || month == 2 ||  month == 4 ||  month == 6 ||  month == 7 ||  month == 9 ||  month == 11 ) {
+        return 31;
+    } else if (month == 3 ||month == 5 ||  month == 8 ||  month == 10) {
+        return 30;
+    } else {
+        //si la funcion dice true, retorna 29 porque es bisiesto
+        return isLeap() ? 29 : 28;
+    }
+ }
 
-//Esta funcion va a colocar los numeros adecuados en el calendario
-function numerar() {
-  //Con fechaPorDia ubicamos los numeros correspondientes del año que queremos
-  for(i = 1; i < 366; i++) {
-    let fecha = fechaPorDia(2022, i);
-    //obtenemos el mes que corresponde al día que estamos viendo
-    let mes = fecha.getMonth();
-    //Usamos el indice obtenido en la linea anterior y añadimos el mes a los elementos de la tabla con la clase "tabla_mes"
-    let select_tabla = document.getElementsByClassName(`tabla_mes`)[mes];
-    //con este metodo obtenemos el día del mes (1 de 31) que corresponde al día del año(1 de 365)
-    let dia = fecha.getDate();
-    //Con esta variable guardamos el dia de la semana al que corresponde (1 de 7)
-    let dia_semana = fecha.getDay();
-    //Mediantes estas sentencias manejamos las filas
-    //Esta primera reinicia el conteo de las filas de la semana cuando empieza el mes
-    if(dia == 1) {var sem = 0;}
-    //con estos metodos accedemos a las secciones de las tablas y le colocamos el dia que corresponde
-    select_tabla.children[2].children[sem].children[dia_semana].innerHTML = ` <button>${dia}</button> `;
-    //Esta sentencia cada vez que termina la semana, aumenta en uno para pasar a la siguiente fila
-    if (dia_semana == 6) {sem = sem + 1; }
-  }
-}
+ //Funcion para saber si el año es bisiesto
+ function isLeap() {
+    return ((currentYear % 100 !==0) && (currentYear & 4 === 0) || (currentYear % 400 === 0));
+ }
 
-//Esta funcion crea el elemento de tipo Date, con el que obtendremos los datos del año, mes y dia.
-//Debemos pasarle el año que queremos y un numero de dia en el cual iniciar
-/**para instanciar date, le pasamos la variable año y setteamos el día cada vez que el bucle for 
- * aumente el iterador, por eso inicia en 0 y luego setteamos solo esa parte y retornamos un nuevo 
- * elemento de tipo date con los datos /correspondientes al iterador. */
-function fechaPorDia(año, dia) {
-  var date = new Date(año, 0);
-  return new Date(date.setDate(dia));
-}
+ //Funcion para saber el dia en el que empieza la semana
+ function startDay() {
+    let start = new Date(currentYear, monthNumber, 1);
+    //La siguiente formula es para que la semana empiece el lunes y no domingo
+    return ((start.getDay() - 1) === -1) ? 6 : start.getDay() - 1;
+ }
+
+ //Funcion que se encarga de dibujar el mes anterior
+ function lastMonth() {
+    //Si el mes es distinto de 0 desconta uno
+    if(monthNumber !== 0){
+        monthNumber--;
+    } else {
+        //si el mes es 0 y volvemos, el numero de mes es 11 y volvemos un año
+        monthNumber = 11;
+        currentYear--;
+    }
+
+    setNewDate();
+ }
+
+ //Funcion que se encarga de dibujar el mes siguiente
+ function nextMonth() {
+    //Si el mes no es 11 que sume uno
+    if(monthNumber !== 11){
+        monthNumber++;
+    } else {
+        //si el mes es 0 que sume un año
+        monthNumber = 0;
+        currentYear++;
+    }
+
+    setNewDate();
+
+ }
+
+ //Funcion que se encarga de establecer la nueva fecha al mover el calendario
+ function setNewDate() {
+    currentDate.setFullYear(currentYear, monthNumber, currentDay);
+    //cambiar el nombre del mes que tenemos
+    month.textContent = monthNames[monthNumber];
+    //cambiar el año
+    year.textContent = currentYear.toString();
+
+    //Esto vacia el container y luego escribe el mes para que no se vayan agregando uno abajo del otro
+    dates.textContent = "";
+    //Cuando establecemos la nueva fecha le decimos que escriba el mes
+    writeMonth(monthNumber);
+ }
+
+
+ //Obtengo numero de dia de la semana 
+ let start = new Date(2022, monthNumber, 3);
+ 
+ console.log(start);
+ console.log(start.getDay());
+
+
+
+
 
 
 /**
- * for (d = 0; d < 7; d++) {
-            let dia = document.createElement("TD");
-            //creamos y añadimos cada dia a cada fila creada anteriormente, por eso esta anidada
-            dia.innerText = "";
-            fila.appendChild(dia);
+ * for(let i = 1; i <= getTotalDays(month); i++){
+        //Si es igual significa que es HOY y le añadimos la clase "today"
+        if(i === currentDay){
+            dates.innerHTML += ` <button class="calendar__date calendar__item calendar__today button">${i}</button> `;
+        } else {
+            //Sino escribe lo mismo pero sin la clase today
+            dates.innerHTML += ` <button class="calendar__date calendar__item button">${i}</button> `;
         }
+
+    }
  */
+
+
